@@ -1,27 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
-import Homepage from './Components/Homepage';
-import Login from './Components/Login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Landingpage from './Components/Landingpage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from "axios"
+import Dashboard from './Components/Dashboard';
+
 
 function App() {
+  const [user, setUser] = useState(false);
+  const [refresh, setRefresh] = useState(true);
+
+  useEffect(() => {
+    fetchUser();
+  }, [refresh]);
+
+  const toggleRefresh = () => setRefresh((p) => !p);
+
+  async function fetchUser() {
+    let res =  await axios.get("http://localhost:5000/api/auth/login/success", { withCredentials: true })
+    let { success, user } = res.data;
+    success && setUser(user);
+    console.log(user);
+    }
+  
   return (
-    <>
-  
-        <div class="row gx-0">
-          <div class="col-md-6">
-          <Login />
-
-          </div>
-          <div class="col-md-6">
-            <Homepage />
-
-          </div>
-        </div>
-
-  
-
-
-    </>
+    <BrowserRouter>
+    {user ? (
+      <>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Dashboard user={user}/>
+            }
+          />
+      
+        </Routes>
+      </>
+    ) : (
+      <>
+        <Routes>
+          <Route path="*" element={<Landingpage  fetchUser={fetchUser}/>} />
+        </Routes>
+      </>
+    )}
+     <ToastContainer theme="colored" />
+  </BrowserRouter>
   );
 }
 
