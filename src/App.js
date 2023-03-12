@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from "axios"
 import Dashboard from './Components/Dashboard';
 import Navbar from './Components/Navbar';
-import Check from './Components/Check';
+
 
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
       <>
       
     <Navbar user={user}/>
-    {/* <Check/> */}
+
         <Routes>
           <Route
             path="/"
